@@ -1,5 +1,5 @@
-# Home Lab Alertmanager Docker Image
+# Homelab Alertmanager Docker Image
 
-[![Build](https://github.com/TuxdudeHomeLab/docker-image-alertmanager/actions/workflows/build.yml/badge.svg)](https://github.com/TuxdudeHomeLab/docker-image-alertmanager/actions/workflows/build.yml) [![Lint](https://github.com/TuxdudeHomeLab/docker-image-alertmanager/actions/workflows/lint.yml/badge.svg)](https://github.com/TuxdudeHomeLab/docker-image-alertmanager/actions/workflows/lint.yml)
+[![Build](https://github.com/tuxgalhomelab/docker-image-alertmanager/actions/workflows/build.yml/badge.svg)](https://github.com/tuxgalhomelab/docker-image-alertmanager/actions/workflows/build.yml) [![Lint](https://github.com/tuxgalhomelab/docker-image-alertmanager/actions/workflows/lint.yml/badge.svg)](https://github.com/tuxgalhomelab/docker-image-alertmanager/actions/workflows/lint.yml)
 
-The docker image used for running [`Alertmanager`](https://github.com/prometheus/alertmanager) in Tuxdude's Home Lab setup.
+The docker image used for running [`Alertmanager`](https://github.com/prometheus/alertmanager) in tuxgal's Homelab setup.
