@@ -325,3 +325,27 @@ diff -u -r -N a/alertmanager/template/default.tmpl b/alertmanager/template/defau
  {{ define "slack.default.title" }}{{ template "__subject" . }}{{ end }}
  {{ define "slack.default.username" }}{{ template "__alertmanager" . }}{{ end }}
  {{ define "slack.default.fallback" }}{{ template "slack.default.title" . }} | {{ template "slack.default.titlelink" . }}{{ end }}
+diff -u -r -N a/alertmanager/ui/app/package.json b/alertmanager/ui/app/package.json
+--- a/alertmanager/ui/app/package.json	2026-06-28 23:41:44.393739242 -0700
++++ b/alertmanager/ui/app/package.json	2026-06-29 00:32:35.316499491 -0700
+@@ -6,7 +6,7 @@
+     "build": "vite build"
+   },
+   "devDependencies": {
+-    "elm": "0.19.1",
++    "elm": "^0.19.1-6",
+     "elm-format": "0.8.7",
+     "elm-review": "2.5.0",
+     "elm-test": "0.19.1-revision6",
+diff -u -r -N a/alertmanager/ui/app/package-lock.json b/alertmanager/ui/app/package-lock.json
+--- a/alertmanager/ui/app/package-lock.json	2026-06-28 23:41:44.393739242 -0700
++++ b/alertmanager/ui/app/package-lock.json	2026-06-29 00:32:08.671812980 -0700
+@@ -12,7 +12,7 @@
+         "font-awesome": "^4.7.0"
+       },
+       "devDependencies": {
+-        "elm": "0.19.1",
++        "elm": "^0.19.1-6",
+         "elm-format": "0.8.7",
+         "elm-review": "2.5.0",
+         "elm-test": "0.19.1-revision6",
