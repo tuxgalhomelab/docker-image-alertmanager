@@ -5,17 +5,21 @@ ARG BASE_IMAGE_TAG
 
 ARG GO_IMAGE_NAME
 ARG GO_IMAGE_TAG
-FROM ${GO_IMAGE_NAME}:${GO_IMAGE_TAG} AS builder
+
+# This stage is unfortunately a mere hack to always build the UI assets
+# directly on the amd64 platform always even if the target platform
+# is arm64.
+# hadolint ignore=DL3029
+FROM --platform=linux/amd64 ${GO_IMAGE_NAME}:${GO_IMAGE_TAG} AS ui-builder
 
 ARG NVM_VERSION
 ARG NVM_SHA256_CHECKSUM
 ARG IMAGE_NODEJS_VERSION
 ARG ALERTMANAGER_VERSION
 
-COPY scripts/start-alertmanager.sh /scripts/
 COPY patches /patches
 
-# hadolint ignore=DL4006,SC3009,SC3040
+# hadolint ignore=DL4006,SC3009,SC3040,SC3044
 RUN \
     set -E -e -o pipefail \
     && export HOMELAB_VERBOSE=y \
@@ -35,6 +39,36 @@ RUN \
     && source /opt/nvm/nvm.sh \
     # Build alertmanager. \
     && make build \
+    && popd \
+    # Copy the UI build artifacts. \
+    && mkdir -p /output/ui \
+    && cp -rf /root/alertmanager-build/ui/app/dist/* /output/ui/
+
+FROM ${GO_IMAGE_NAME}:${GO_IMAGE_TAG} AS builder
+
+ARG ALERTMANAGER_VERSION
+
+COPY scripts/start-alertmanager.sh /scripts/
+COPY patches /patches
+
+# hadolint ignore=DL4006,SC3009,SC3040
+RUN --mount=type=bind,target=/alertmanager-ui-build,from=ui-builder,source=/output \
+    set -E -e -o pipefail \
+    && export HOMELAB_VERBOSE=y \
+    && homelab install build-essential git \
+    # Download alertmanager repo. \
+    && homelab download-git-repo \
+        https://github.com/prometheus/alertmanager \
+        ${ALERTMANAGER_VERSION:?} \
+        /root/alertmanager-build \
+    && pushd /root/alertmanager-build \
+    # Copy the UI assets. \
+    && cp -rf /alertmanager-ui-build/ui/. ./ui/app/dist \
+    # Apply the patches. \
+    && (find /patches -iname *.diff -print0 | sort -z | xargs -0 -r -n 1 patch -p2 -i) \
+    # Build alertmanager and amtool directly instead without \
+    # building the UI. \
+    && make common-build \
     && popd \
     # Copy the build artifacts. \
     && mkdir -p /output/{bin,scripts,configs} \
